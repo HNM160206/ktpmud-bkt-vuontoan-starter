@@ -1,0 +1,4 @@
+node_modules
+data/*.db*
+original-backup
+npm-debug.log

@@ -29,7 +29,7 @@ Lần chạy đầu, server tự tạo `data/vuon-toan.db` và nạp dữ liệu
 
 | Vai trò | Tên đăng nhập | Mật khẩu | Ghi chú |
 |---|---|---|---|
-| Học sinh | `hocsinh01` | `123456` | Bảo Nam, Lớp 3A |
+| Học sinh | `hocsinh01` … `hocsinh99` | `123456` | 99 tài khoản giả lập lớp 3A2, dùng cho test/demo hackathon — không phải học sinh thật |
 | Giáo viên | `giaovien01` | `123456` | Vào thẳng Góc Giáo Viên |
 
 > Khi đưa lên Internet thật: đổi mật khẩu các tài khoản mẫu, và đặt biến môi trường

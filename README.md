@@ -1,7 +1,7 @@
 
 # 🌱 Vườn Toán Lớp 3 — Trường Tiểu học Hoàng Mai
 
-**Nhóm thực hiện:** Nhóm 28 — KTPMUD Hack Marathon 2026, Track B (`hoang_mai_toan`)
+**Nhóm thực hiện:** Nhóm 43 — KTPMUD Hack Marathon 2026, Track B (`hoang_mai_toan`)
 
 ## 1. Cách chạy
 

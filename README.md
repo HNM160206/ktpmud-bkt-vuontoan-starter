@@ -1,18 +1,7 @@
-> **Đây là bản sao đóng băng (starter) dùng cho Bài kiểm tra Hackathon (BKT-2 /
-> Track B) môn Kỹ thuật Phần mềm Ứng dụng (KTPMUD) — KHÔNG phải ứng dụng thật
-> đang vận hành, không kết nối tới dữ liệu/CSDL production thật.** Toàn bộ tên
-> người và ảnh thật trong bản gốc đã được thay bằng dữ liệu hư cấu trước khi
-> công khai repo này. Sinh viên làm việc trên fork của repo NÀY, nộp bài qua
-> `ktpmud-project` theo đúng hướng dẫn `nop_bai.md` của KTPMUD — không PR vào
-> ứng dụng Vườn Toán thật.
-
----
 
 # 🌱 Vườn Toán Lớp 3 — Trường Tiểu học Hoàng Mai
 
-Web học Toán lớp 3 gồm giao diện học sinh (bài học, luyện tập, kiểm tra, trò chơi, bảng xếp hạng)
-và khu vực giáo viên (theo dõi lớp, cấp tài khoản). Đợt 1 đã nối **backend thật**:
-đăng nhập/đăng xuất, chấm điểm trên server, lưu điểm & tiến độ vào cơ sở dữ liệu SQLite.
+**Nhóm thực hiện:** Nhóm 28 — KTPMUD Hack Marathon 2026, Track B (`hoang_mai_toan`)
 
 ## 1. Cách chạy
 

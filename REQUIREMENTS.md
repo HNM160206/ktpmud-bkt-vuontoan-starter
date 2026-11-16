@@ -9,7 +9,7 @@ Mở rộng hệ thống học toán lớp 3 hiện có bằng cách thêm dạn
 | :--- | :--- | :--- |
 | **B-01** | Tích hợp luồng học | Dạng bài mới hiển thị trực tiếp trong menu/luồng bài học sẵn có, không tạo trang demo rời. |
 | **B-02** | Dữ liệu Fixtures | Cung cấp tối thiểu 12 câu hỏi/bài tập synthetic có thể tái lập được (seed data). |
-| **B-03** | Chấm điểm tất định | Thuật toán backend kiểm tra giá trị ước lượng dựa trên ngưỡng sai số cho phép (ví dụ: $\pm 15\%$ so với kết quả chính xác hoặc làm tròn hàng chục/trăm). |
+| **B-03** | Chấm điểm tất định | Thuật toán backend kiểm tra giá trị ước lượng dựa trên ngưỡng sai số cho phép (ví dụ: $\pm 20\%$ so với kết quả chính xác hoặc làm tròn hàng chục/trăm). |
 | **B-04** | Bảo mật đáp án | API trả về câu hỏi **không** kèm theo đáp án đúng; việc chấm điểm thực hiện hoàn toàn ở phía server. |
 | **B-05** | Lưu trạng thái Server | Kết quả luyện tập và trạng thái làm bài được lưu vào SQLite; tải lại trang (F5) không mất dữ liệu. |
 | **B-06** | Phản hồi sư phạm (Feedback) | Hệ thống trả về thông báo rõ ràng, phân biệt giữa **"Ước lượng hợp lý"** và **"Kết quả tính chính xác"**. |

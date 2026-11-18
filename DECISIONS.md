@@ -78,7 +78,7 @@ Với giá trị đáp án tham chiếu `R`, khoảng dung sai ±20% được x�
 
 Một kết quả ước lượng được xem là hợp lý nếu nằm trong khoảng chấp nhận.
 
-Khi sử dụng khoảng `lo-hi` được lưu trong `correct_answer`, backend kiểm tra trực tiếp giá trị đầu vào với hai giới hạn này.
+Khi seed một câu hỏi estimate, backend tính hai biên bằng `ceil(R × 0.8)` và `floor(R × 1.2)`, sau đó lưu thành chuỗi `lo-hi` trong `correct_answer`. Giá trị chính xác R được lưu ở trường `category` để giữ nguyên schema; API danh sách câu hỏi không trả `category` của câu estimate. Backend kiểm tra ước lượng nằm trong khoảng đóng `[lo, hi]`.
 
 ### Lý do
 - Quy tắc dễ hiểu và phù hợp với bài toán ước lượng.
@@ -105,9 +105,17 @@ Thiết kế giao diện theo hai bước:
 **Bước 1 – Ước lượng**
 - Hiển thị đề bài.
 - Học sinh nhập kết quả ước lượng.
-- Gửi kết quả lên server để kiểm tra.
-- Không hiển thị đáp án chính xác trước khi hoàn thành bước này.
+- Gửi kết quả lên server để kiểm tra; server chỉ trả kết luận hợp lý/chưa hợp lý, không trả khoảng dung sai hoặc đáp án chính xác.
+- Không hiển thị ô nhập kết quả chính xác trước khi hoàn thành bước này.
 
 **Bước 2 – Tính chính xác**
-- Sau khi hoàn thành bước ước lượng, học sinh thực hiện phép tính chính xác.
-- Gửi kết quả
+- Sau khi server kiểm tra bước ước lượng, học sinh thực hiện phép tính chính xác.
+- Gửi cả hai kết quả lên API nộp bài để chấm điểm và lưu tiến độ.
+
+### Ghi chú triển khai
+
+- Module `server/estimationScorer.js` cung cấp `buildToleranceRange`, `parseRange` và `isReasonableEstimate`.
+- Fixture `data/estimation_fixtures.json` chứa 12 câu hỏi synthetic; bộ câu hỏi được nạp từ `data/seed.json`.
+- API `GET /api/question-sets/:setId/questions` loại bỏ `category` của câu `estimate` để không làm lộ kết quả chính xác.
+- API `POST /api/question-sets/:setId/estimate-check` kiểm tra riêng bước ước lượng và chỉ trả kết luận, không trả khoảng dung sai. API `POST /api/submissions` nhận `answers[questionId] = { estimate, exact }`, chấm độc lập hai phần và trả một trong bốn phản hồi ADR-005.
+- `correct_answer` lưu khoảng `lo-hi`; `category` giữ kết quả chính xác phía server. Không thay đổi schema SQLite.

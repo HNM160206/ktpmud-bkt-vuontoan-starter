@@ -162,6 +162,134 @@ function seedIfEmpty() {
 seedIfEmpty();
 seedQuestionSets();
 
+/**
+ * Bổ sung bộ câu hỏi estimate an toàn cho cả DB đã tồn tại.
+ * INSERT OR IGNORE giúp không nhân đôi dữ liệu và không đổi schema.
+ */
+function seedEstimationSet() {
+  const seed = JSON.parse(fs.readFileSync(SEED_PATH, 'utf8'));
+  const setId = 'uoc-luong-truoc-khi-tinh';
+  const set = seed.questionSets[setId];
+  if (!set) return;
+  db.prepare(`INSERT OR IGNORE INTO question_sets (id,title,kind,lesson_id,star_reward,duration_minutes)
+    VALUES (?,?,?,?,?,?)`).run(setId, set.title, set.kind || 'exercise', set.lessonId || null, 40, 0);
+  const insert = db.prepare(`INSERT OR IGNORE INTO questions
+    (id,set_id,lesson_id,type,prompt,options_json,correct_answer,points,category,sort_order)
+    VALUES (?,?,?,?,?,?,?,?,?,?)`);
+  const tx = db.transaction(() => set.questions.forEach((q, i) => insert.run(
+    q.id, setId, set.lessonId || null, q.type, q.prompt,
+    q.options ? JSON.stringify(q.options) : null, q.correctAnswer,
+    q.points || 1, q.category || '', i + 1
+  )));
+  tx();
+}
+seedEstimationSet();
+
+/**
+ * Đồng bộ bài 9, bài 10 và hai bộ câu hỏi từ seed.json.
+ * Không xóa tài khoản, tiến độ hoặc lịch sử làm bài.
+ */
+function syncUpdatedLessons() {
+  const seed = JSON.parse(fs.readFileSync(SEED_PATH, 'utf8'));
+
+  const targetLessons = ['bai-9', 'bai-10'];
+  const targetSets = [
+    'uoc-luong-nhan-chia-6',
+    'uoc-luong-truoc-khi-tinh'
+  ];
+
+  const upsertLesson = db.prepare(`
+    INSERT INTO lessons
+      (id, number, title, description, topic, sort_order, unlock_after)
+    VALUES
+      (@id, @number, @title, @description, @topic, @sortOrder, @unlockAfter)
+    ON CONFLICT(id) DO UPDATE SET
+      number = excluded.number,
+      title = excluded.title,
+      description = excluded.description,
+      topic = excluded.topic,
+      sort_order = excluded.sort_order,
+      unlock_after = excluded.unlock_after
+  `);
+
+  const upsertSet = db.prepare(`
+    INSERT INTO question_sets
+      (id, title, kind, lesson_id, star_reward, duration_minutes)
+    VALUES (?, ?, ?, ?, ?, ?)
+    ON CONFLICT(id) DO UPDATE SET
+      title = excluded.title,
+      kind = excluded.kind,
+      lesson_id = excluded.lesson_id,
+      star_reward = excluded.star_reward,
+      duration_minutes = excluded.duration_minutes
+  `);
+
+  const upsertQuestion = db.prepare(`
+    INSERT INTO questions
+      (id, set_id, lesson_id, type, prompt, options_json,
+       correct_answer, points, category, sort_order)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT(id) DO UPDATE SET
+      set_id = excluded.set_id,
+      lesson_id = excluded.lesson_id,
+      type = excluded.type,
+      prompt = excluded.prompt,
+      options_json = excluded.options_json,
+      correct_answer = excluded.correct_answer,
+      points = excluded.points,
+      category = excluded.category,
+      sort_order = excluded.sort_order
+  `);
+
+  const tx = db.transaction(() => {
+    // Đồng bộ thông tin bài học
+    seed.lessons.forEach((lesson, index) => {
+      if (!targetLessons.includes(lesson.id)) return;
+
+      upsertLesson.run({
+        ...lesson,
+        sortOrder: index + 1,
+        unlockAfter: lesson.unlockAfter || null
+      });
+    });
+
+    // Đồng bộ bộ câu hỏi và nội dung câu hỏi
+    for (const setId of targetSets) {
+      const set = seed.questionSets[setId];
+      if (!set) continue;
+
+      upsertSet.run(
+        setId,
+        set.title || setId,
+        set.kind || 'exercise',
+        set.lessonId || null,
+        set.kind === 'exam' ? 100 : 40,
+        set.durationMinutes || 0
+      );
+
+      set.questions.forEach((q, index) => {
+        upsertQuestion.run(
+          q.id,
+          setId,
+          set.lessonId || null,
+          q.type,
+          q.prompt,
+          q.options ? JSON.stringify(q.options) : null,
+          String(q.correctAnswer),
+          q.points || 1,
+          q.category || '',
+          index + 1
+        );
+      });
+    }
+  });
+
+  tx();
+  console.log('[DB] Da dong bo bai 9, bai 10 va bo cau hoi.');
+}
+
+syncUpdatedLessons();
+
 // Đảm bảo thông tin Cô Lan Anh (GV Chủ nhiệm minh họa) và học sinh luôn được cập nhật chính xác
 try {
   db.prepare("UPDATE users SET full_name = 'Cô Lan Anh (GV Chủ nhiệm minh họa)', class_name = '3A2' WHERE username = 'giaovien01'").run();

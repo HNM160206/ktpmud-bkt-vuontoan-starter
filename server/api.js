@@ -10,6 +10,7 @@ const db = require('./db');
 const { setAuthCookie, clearAuthCookie, requireAuth, requireTeacher } = require('./auth');
 
 const router = express.Router();
+const { scoreEstimate, isReasonableEstimate } = require('./estimationScorer');
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 if (!GOOGLE_CLIENT_ID) {
   console.warn('[Google Auth] GOOGLE_CLIENT_ID chưa được cấu hình; đăng nhập Google sẽ bị từ chối.');
@@ -157,7 +158,29 @@ router.get('/curriculum', (req, res) => {
 router.get('/question-sets/:setId/questions', requireAuth, (req, res) => {
   const rows = db.prepare('SELECT id,type,prompt,options_json,points,category FROM questions WHERE set_id=? ORDER BY sort_order').all(req.params.setId);
   if (!rows.length) return res.status(404).json({ error: 'Không tìm thấy bộ câu hỏi.' });
-  res.json({ setId: req.params.setId, questions: rows.map(r => ({ ...r, options: r.options_json ? JSON.parse(r.options_json) : undefined, options_json: undefined })) });
+  res.json({ setId: req.params.setId, questions: rows.map(r => ({
+    id: r.id, type: r.type, prompt: r.prompt, points: r.points,
+    options: r.options_json ? JSON.parse(r.options_json) : undefined,
+    // category của estimate lưu đáp án tính chính xác, tuyệt đối không gửi xuống client.
+    ...(r.type === 'estimate' ? {} : { category: r.category }),
+  })) });
+});
+
+/* Kiểm tra riêng bước ước lượng; chỉ trả kết luận, không trả khoảng hay đáp án chính xác. */
+router.post('/question-sets/:setId/estimate-check', requireAuth, (req, res) => {
+  const questionId = String(req.body?.questionId || '').trim();
+  const question = db.prepare('SELECT id,type,correct_answer FROM questions WHERE id=? AND set_id=?')
+    .get(questionId, req.params.setId);
+  if (!question || question.type !== 'estimate') {
+    return res.status(404).json({ error: 'Không tìm thấy câu hỏi ước lượng.' });
+  }
+  const estimateReasonable = isReasonableEstimate(req.body?.estimate, question.correct_answer);
+  res.json({
+    estimateReasonable,
+    message: estimateReasonable
+      ? 'Ước lượng của em nằm trong khoảng hợp lý. Bây giờ hãy tính chính xác nhé!'
+      : 'Ước lượng chưa nằm trong khoảng hợp lý. Em có thể sửa lại hoặc tiếp tục tính chính xác.',
+  });
 });
 
 /* ---------------- Nộp bài & chấm điểm trên server ---------------- */
@@ -172,7 +195,17 @@ router.post('/submissions', requireAuth, (req, res) => {
   if (!meta) return res.status(400).json({ error: 'Bộ bài không hợp lệ.' });
   const questions = db.prepare('SELECT * FROM questions WHERE set_id=? ORDER BY sort_order').all(setId);
   let earned = 0, max = 0, correct = 0;
+  const totalParts = questions.reduce((count, q) => count + (q.type === 'estimate' ? 2 : 1), 0);
   const detail = questions.map(q => {
+    if (q.type === 'estimate') {
+      // Client gửi { estimate, exact }; cả hai phần đều được kiểm tra phía server.
+      const submitted = answers[q.id] && typeof answers[q.id] === 'object' ? answers[q.id] : {};
+      const scored = scoreEstimate(submitted.estimate, submitted.exact, q.correct_answer, q.category);
+      max += q.points * 2;
+      if (scored.estimateReasonable) { earned += q.points; correct++; }
+      if (scored.exactCorrect) { earned += q.points; correct++; }
+      return { questionId: q.id, ...scored };
+    }
     max += q.points;
     const given = answers[q.id] == null ? '' : String(answers[q.id]).trim().toLowerCase();
     const ok = given === String(q.correct_answer).trim().toLowerCase();
@@ -188,7 +221,7 @@ router.post('/submissions', requireAuth, (req, res) => {
 
   const tx = db.transaction(() => {
     db.prepare(`INSERT INTO attempts (user_id,kind,ref_id,score_percent,correct_count,total_count,stars_earned,duration_sec,answers_json)
-      VALUES (?,?,?,?,?,?,?,?,?)`).run(req.user.id, meta.kind, setId, percent, correct, questions.length, starsEarned, Number(durationSec) || 0, JSON.stringify(answers));
+      VALUES (?,?,?,?,?,?,?,?,?)`).run(req.user.id, meta.kind, setId, percent, correct, totalParts, starsEarned, Number(durationSec) || 0, JSON.stringify(answers));
     db.prepare(`INSERT INTO progress (user_id,lesson_id,best_score,completed,updated_at) VALUES (?,?,?,?,datetime('now','localtime'))
       ON CONFLICT(user_id,lesson_id) DO UPDATE SET best_score=MAX(best_score,excluded.best_score),
         completed=MAX(completed,excluded.completed), updated_at=datetime('now','localtime')`)
@@ -197,7 +230,7 @@ router.post('/submissions', requireAuth, (req, res) => {
   });
   tx();
   const me = db.prepare('SELECT total_stars FROM users WHERE id=?').get(req.user.id);
-  res.json({ scorePercent: percent, correctCount: correct, totalCount: questions.length, starsEarned, totalStars: me.total_stars, detail });
+  res.json({ scorePercent: percent, correctCount: correct, totalCount: totalParts, starsEarned, totalStars: me.total_stars, detail });
 });
 
 /* ---------------- Bảng xếp hạng (tính từ dữ liệu thật) ---------------- */

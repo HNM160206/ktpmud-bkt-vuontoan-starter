@@ -1,0 +1,102 @@
+{
+  "description": "12 câu hỏi ước lượng synthetic; correctAnswer là khoảng ±20%, category lưu kết quả chính xác phía server.",
+  "tolerance": 0.2,
+  "questions": [
+    {
+      "id": "estimate-01",
+      "type": "estimate",
+      "prompt": "24 × 4 = ?",
+      "correctAnswer": "77-115",
+      "category": "96",
+      "points": 5
+    },
+    {
+      "id": "estimate-02",
+      "type": "estimate",
+      "prompt": "23 × 4 = ?",
+      "correctAnswer": "74-110",
+      "category": "92",
+      "points": 5
+    },
+    {
+      "id": "estimate-03",
+      "type": "estimate",
+      "prompt": "32 × 3 = ?",
+      "correctAnswer": "77-115",
+      "category": "96",
+      "points": 5
+    },
+    {
+      "id": "estimate-04",
+      "type": "estimate",
+      "prompt": "47 : 4 ≈ ?",
+      "correctAnswer": "10-14",
+      "category": "11.75",
+      "points": 5
+    },
+    {
+      "id": "estimate-05",
+      "type": "estimate",
+      "prompt": "81 : 9 = ?",
+      "correctAnswer": "8-10",
+      "category": "9",
+      "points": 5
+    },
+    {
+      "id": "estimate-06",
+      "type": "estimate",
+      "prompt": "36 × 5 = ?",
+      "correctAnswer": "144-216",
+      "category": "180",
+      "points": 5
+    },
+    {
+      "id": "estimate-07",
+      "type": "estimate",
+      "prompt": "125 × 4 = ?",
+      "correctAnswer": "400-600",
+      "category": "500",
+      "points": 5
+    },
+    {
+      "id": "estimate-08",
+      "type": "estimate",
+      "prompt": "240 : 6 = ?",
+      "correctAnswer": "32-48",
+      "category": "40",
+      "points": 5
+    },
+    {
+      "id": "estimate-09",
+      "type": "estimate",
+      "prompt": "19 × 5 = ?",
+      "correctAnswer": "76-114",
+      "category": "95",
+      "points": 5
+    },
+    {
+      "id": "estimate-10",
+      "type": "estimate",
+      "prompt": "144 : 12 = ?",
+      "correctAnswer": "10-14",
+      "category": "12",
+      "points": 5
+    },
+    {
+      "id": "estimate-11",
+      "type": "estimate",
+      "prompt": "48 × 2 = ?",
+      "correctAnswer": "77-115",
+      "category": "96",
+      "points": 5
+    },
+    {
+      "id": "estimate-12",
+      "type": "estimate",
+      "prompt": "99 : 3 = ?",
+      "correctAnswer": "27-39",
+      "category": "33",
+      "points": 5
+    }
+  ]
+}

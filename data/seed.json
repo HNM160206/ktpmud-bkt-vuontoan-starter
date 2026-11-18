@@ -970,7 +970,7 @@
     {
       "id": "bai-9",
       "number": 9,
-      "title": "Bảng nhân 6",
+      "title": "Bảng nhân 6, bảng chia 6",
       "description": "Hình thành bảng nhân 6, giải toán có lời văn gấp lên nhiều lần.",
       "topic": "Chủ đề 2: Bảng nhân & bảng chia",
       "unlockAfter": "bai-8"
@@ -978,7 +978,7 @@
     {
       "id": "bai-10",
       "number": 10,
-      "title": "Bảng chia 6",
+      "title": "Bảng nhân 7, bảng chia 7",
       "description": "Mối quan hệ nhân - chia, tìm thành phần chưa biết của phép nhân.",
       "topic": "Chủ đề 2: Bảng nhân & bảng chia",
       "unlockAfter": "bai-9"
@@ -3016,6 +3016,212 @@
           "type": "input",
           "prompt": "Thư viện Hoàng Mai có 54.198 quyển sách, thư viện bạn có 54.285 quyển. Sau khi Hoàng Mai nhận thêm 97 quyển, thư viện nào có nhiều sách hơn? Viết số sách của thư viện nhiều hơn.",
           "correctAnswer": "54295",
+          "points": 5
+        }
+      ]
+    },
+    "uoc-luong-nhan-chia-6": {
+      "lessonId": "bai-9",
+      "title": "Ước lượng bảng nhân 6, bảng chia 6",
+      "kind": "exercise",
+      "questions": [
+        {
+          "id": "estimate-6-01",
+          "type": "estimate",
+          "prompt": "6 × 3 = ?",
+          "correctAnswer": "15-21",
+          "category": "18",
+          "points": 5
+        },
+        {
+          "id": "estimate-6-02",
+          "type": "estimate",
+          "prompt": "6 × 4 = ?",
+          "correctAnswer": "20-28",
+          "category": "24",
+          "points": 5
+        },
+        {
+          "id": "estimate-6-03",
+          "type": "estimate",
+          "prompt": "6 × 5 = ?",
+          "correctAnswer": "24-36",
+          "category": "30",
+          "points": 5
+        },
+        {
+          "id": "estimate-6-04",
+          "type": "estimate",
+          "prompt": "6 × 6 = ?",
+          "correctAnswer": "29-43",
+          "category": "36",
+          "points": 5
+        },
+        {
+          "id": "estimate-6-05",
+          "type": "estimate",
+          "prompt": "6 × 7 = ?",
+          "correctAnswer": "34-50",
+          "category": "42",
+          "points": 5
+        },
+        {
+          "id": "estimate-6-06",
+          "type": "estimate",
+          "prompt": "6 × 8 = ?",
+          "correctAnswer": "39-57",
+          "category": "48",
+          "points": 5
+        },
+        {
+          "id": "estimate-6-07",
+          "type": "estimate",
+          "prompt": "6 × 9 = ?",
+          "correctAnswer": "44-64",
+          "category": "54",
+          "points": 5
+        },
+        {
+          "id": "estimate-6-08",
+          "type": "estimate",
+          "prompt": "6 × 10 = ?",
+          "correctAnswer": "48-72",
+          "category": "60",
+          "points": 5
+        },
+        {
+          "id": "estimate-6-09",
+          "type": "estimate",
+          "prompt": "12 : 6 = ?",
+          "correctAnswer": "2-2",
+          "category": "2",
+          "points": 5
+        },
+        {
+          "id": "estimate-6-10",
+          "type": "estimate",
+          "prompt": "18 : 6 = ?",
+          "correctAnswer": "3-3",
+          "category": "3",
+          "points": 5
+        },
+        {
+          "id": "estimate-6-11",
+          "type": "estimate",
+          "prompt": "30 : 6 = ?",
+          "correctAnswer": "4-6",
+          "category": "5",
+          "points": 5
+        },
+        {
+          "id": "estimate-6-12",
+          "type": "estimate",
+          "prompt": "48 : 6 = ?",
+          "correctAnswer": "7-9",
+          "category": "8",
+          "points": 5
+        }
+      ]
+    },
+    "uoc-luong-truoc-khi-tinh": {
+      "lessonId": "bai-10",
+      "title": "Ước lượng trước khi tính đúng",
+      "kind": "exercise",
+      "questions": [
+        {
+          "id": "estimate-01",
+          "type": "estimate",
+          "prompt": "7 × 2 = ?",
+          "correctAnswer": "12-16",
+          "category": "14",
+          "points": 5
+        },
+        {
+          "id": "estimate-02",
+          "type": "estimate",
+          "prompt": "7 × 3 = ?",
+          "correctAnswer": "17-25",
+          "category": "21",
+          "points": 5
+        },
+        {
+          "id": "estimate-03",
+          "type": "estimate",
+          "prompt": "7 × 4 = ?",
+          "correctAnswer": "23-33",
+          "category": "28",
+          "points": 5
+        },
+        {
+          "id": "estimate-04",
+          "type": "estimate",
+          "prompt": "7 × 5 = ?",
+          "correctAnswer": "28-42",
+          "category": "35",
+          "points": 5
+        },
+        {
+          "id": "estimate-05",
+          "type": "estimate",
+          "prompt": "7 × 6 = ?",
+          "correctAnswer": "34-50",
+          "category": "42",
+          "points": 5
+        },
+        {
+          "id": "estimate-06",
+          "type": "estimate",
+          "prompt": "7 × 7 = ?",
+          "correctAnswer": "40-58",
+          "category": "49",
+          "points": 5
+        },
+        {
+          "id": "estimate-07",
+          "type": "estimate",
+          "prompt": "7 × 8 = ?",
+          "correctAnswer": "45-67",
+          "category": "56",
+          "points": 5
+        },
+        {
+          "id": "estimate-08",
+          "type": "estimate",
+          "prompt": "7 × 9 = ?",
+          "correctAnswer": "51-75",
+          "category": "63",
+          "points": 5
+        },
+        {
+          "id": "estimate-09",
+          "type": "estimate",
+          "prompt": "14 : 7 = ?",
+          "correctAnswer": "2-2",
+          "category": "2",
+          "points": 5
+        },
+        {
+          "id": "estimate-10",
+          "type": "estimate",
+          "prompt": "21 : 7 = ?",
+          "correctAnswer": "3-3",
+          "category": "3",
+          "points": 5
+        },
+        {
+          "id": "estimate-11",
+          "type": "estimate",
+          "prompt": "42 : 7 = ?",
+          "correctAnswer": "5-7",
+          "category": "6",
+          "points": 5
+        },
+        {
+          "id": "estimate-12",
+          "type": "estimate",
+          "prompt": "56 : 7 = ?",
+          "correctAnswer": "7-9",
+          "category": "8",
           "points": 5
         }
       ]
